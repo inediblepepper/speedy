@@ -1,29 +1,4 @@
 /**
- * Copyright (c) 2011, salesforce.com, inc.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification, are permitted provided
- * that the following conditions are met:
- *
- *    Redistributions of source code must retain the above copyright notice, this list of conditions and the
- *    following disclaimer.
- *
- *    Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
- *    the following disclaimer in the documentation and/or other materials provided with the distribution.
- *
- *    Neither the name of salesforce.com, inc. nor the names of its contributors may be used to endorse or
- *    promote products derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
- * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
- * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
-/**
 *@namespace Sfdc.canvas.client
 *@name Sfdc.canvas.client
 */
@@ -31,10 +6,11 @@
 
     "use strict";
 
-    
+    var pversion, cversion = "27.0", loaded = false;
+
     var module =   (function() /**@lends module */ {
         
-        var purl, cbs = {}, seq = 0;
+        var purl, cbs = [], seq = 0;
         /**
         * @description
         * @function
@@ -51,18 +27,18 @@
             return purl;
         }
 
-        function callbacker(message) {
-            if (message && message.data) {
+        function callbacker(data) {
+            if (data) {
                 // If the server is telling us the access_token is invalid, wipe it clean.
-                if (message.data.status === 401 &&
-                    $$.isArray(message.data.payload) &&
-                    message.data.payload[0].errorCode &&
-                    message.data.payload[0].errorCode === "INVALID_SESSION_ID") {
+                if (data.status === 401 &&
+                    $$.isArray(data.payload) &&
+                    data.payload[0].errorCode &&
+                    data.payload[0].errorCode === "INVALID_SESSION_ID") {
                     // Session has expired logout.
                     $$.oauth.logout();
                 }
-                if ($$.isFunction(cbs[message.data.seq])) {
-                    cbs[message.data.seq](message.data);
+                if ($$.isFunction(cbs[data.seq])) {
+                    cbs[data.seq](data);
                 }
                 else {
                     // This can happen when the user switches out canvas apps real quick,
@@ -80,7 +56,7 @@
             // limit the sequencers to 100 avoid out of memory errors
             seq = (seq > 100) ? 0 : seq + 1;
             cbs[seq] = clientscb;
-            var wrapped = {seq : seq, body : message};
+            var wrapped = {seq : seq, src : "client", clientVersion : cversion, parentVersion: pversion, body : message};
             $$.xd.post(wrapped, getParentUrl(), parent);
         }
 
@@ -185,16 +161,35 @@
             postit(ccb, {type : "ajax", accessToken : token, url : url, config : config});
         }
 
+        function register() {
+            function cb(info) {
+                pversion = info.parentVersion;
+                loaded = true;
+            }
+            postit(cb, {type : "register", url : document.location.href});
+        }
+
         function token(t) {
             $$.oauth.token(t);
         }
 
+        function version() {
+            return {clientVersion: cversion, parentVersion : pversion};
+        }
+
+        function isLoaded() {
+            return loaded;
+        }
+
         $$.xd.receive(callbacker, getParentUrl());
+        register();
 
         return {
             ctx : getContext,
             ajax : ajax,
-            token : token
+            token : token,
+            version : version,
+            loaded : isLoaded
         };
     }());
 
