@@ -56,8 +56,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
             Sfdc.canvas(function() {
                 var sr = JSON.parse('<%=signedRequestJson%>');
-                // Save the token
-                Sfdc.canvas.oauth.token(sr.oauthToken);
                 var photoUri = sr.context.user.profileThumbnailUrl +  "?oauth_token=" + sr.oauthToken;
                 Sfdc.canvas.byId('fullname').innerHTML = sr.context.user.fullName;
                 Sfdc.canvas.byId('profile').src = (photoUri.indexOf("http")==0 ? "" :sr.instanceUrl) + photoUri;

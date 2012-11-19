@@ -11,7 +11,7 @@
 
     var oproto = Object.prototype,
         aproto = Array.prototype,
-        doc = document,
+        doc = global.document,
         /**
         * @class Canvas
         * @exports $ as Sfdc.canvas
@@ -67,6 +67,7 @@
             * @returns {Boolean} <code>true</code> if the object or value is a function, otherwise <code>false</code>
             */
             isFunction: function (value) {
+                //return typeof value === "function";
                 return !!(value && value.constructor && value.call && value.apply);
             },
             
@@ -319,6 +320,31 @@
                 return s.join("&").replace(/%20/g, "+");
             },
 
+            /**
+             * @description Strip out the URL to just the {scheme}://{host}:{port} - remove any path and query string information.
+             * @param {String} url The url to be stripped
+             * @returns {String} just the {scheme}://{host}:{port} portion of the url.
+             */
+            stripUrl : function(url) {
+                return ($.isNil(url)) ? null : url.replace( /([^:]+:\/\/[^\/\?#]+).*/, '$1');
+            },
+
+            /**
+             * @description append the query string to the end of the URL, and strip off any existing Hash tag
+             * @param {String} url The url to be appended to
+             * @returns uel with query string appended..
+             */
+            query : function(url, q) {
+                if ($.isNil(q)) {
+                    return url;
+                }
+                // Strip any old hash tags
+                url = url.replace(/#.*$/, '');
+                url += (/^\#/.test(q)) ? q  : (/\?/.test( url ) ? "&" : "?") + q;
+                return url;
+            },
+
+
             // strings
             //--------
             /**
@@ -424,19 +450,8 @@
             },
 
             /**
-             * @description register a callback to be called after all canvas modules have been loaded.
-             * Loaded happens after onReady()
-             * @param {Function} The callback function to be called.
-             */
-            onLoaded : function(cb) {
-                if ($.isFunction(cb)) {
-                    loadedHandlers.push(cb);
-                }
-            },
-
-            /**
              * @description register a callback to be called after the DOM is ready.
-             * onReady occurs before onLoaded().
+             * onReady.
              * @param {Function} The callback function to be called.
              */
             onReady : function(cb) {
@@ -444,21 +459,15 @@
                     readyHandlers.push(cb);
                 }
             }
-        },
+
+       },
 
         readyHandlers = [],
-        loadedHandlers = [],
 
         ready = function () {
             ready = $.nop;
             $.each(readyHandlers, $.invoker);
             readyHandlers = null;
-        },
-
-        loaded = function () {
-            loaded = $.nop;
-            $.each(loadedHandlers, $.invoker);
-            loadedHandlers = null;
         },
 
         /**
@@ -467,44 +476,24 @@
         */
         canvas = function (cb) {
             if ($.isFunction(cb)) {
-                // Maybe change this to loadedHandlers
                 readyHandlers.push(cb);
             }
         };
 
     (function () {
         var ael = 'addEventListener',
-            modulesLoaded = function() {
-                var m, l = true;
-                for (m in Sfdc.canvas) {
-                    // Ask each module if it has been fully loaded.
-                    if ($.isObject(Sfdc.canvas[m]) && $.isFunction(Sfdc.canvas[m].loaded)) {
-                        if (!Sfdc.canvas[m].loaded()) {
-                            l = false;
-                        }
-                    }
-                }
-                return l;
-            },
-            tryLoaded = function () {
-                if (modulesLoaded()) {
-                    loaded();
-                }
-                else if (loadedHandlers) {
-                    setTimeout(tryLoaded, 30);
-                }
-            },
             tryReady = function () {
-                if (/loaded|complete/.test(doc.readyState)) {
+                if (doc && /loaded|complete/.test(doc.readyState)) {
                     ready();
-                    tryLoaded();
                 }
                 else if (readyHandlers) {
-                    setTimeout(tryReady, 30);
+                    if ($.isFunction(global.setTimeout)) {
+                        global.setTimeout(tryReady, 30);
+                    }
                 }
             };
 
-        if (doc[ael]) {
+        if (doc && doc[ael]) {
             doc[ael]('DOMContentLoaded', ready, false);
         }
 
