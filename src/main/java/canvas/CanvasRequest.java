@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, salesforce.com, inc.
+ * Copyright (c) 2011-2013, salesforce.com, inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -23,14 +23,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 package canvas;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  *
@@ -38,9 +31,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * request is information for authenticating and context about the user, organization and environment.
  * <p>
  * This class is serialized into JSON on then signed by the signature service to prevent tampering.
- *
  */
-@JsonIgnoreProperties(ignoreUnknown=true)
+@org.codehaus.jackson.annotate.JsonIgnoreProperties(ignoreUnknown=true)
 public class CanvasRequest {
 
     private String  algorithm;
@@ -51,14 +43,14 @@ public class CanvasRequest {
 
     /**
      * The algorithm used to sign the request. typically HMAC-SHA256
-     * @see platform.connect.service.SignRequestService.ALGORITHM
+     * @see force.canvas.service.SignRequestService.ALGORITHM
      */
-    @JsonProperty("algorithm")
+    @org.codehaus.jackson.annotate.JsonProperty("algorithm")
     public String getAlgorithm() {
         return algorithm;
     }
 
-    @JsonProperty("algorithm")
+    @org.codehaus.jackson.annotate.JsonProperty("algorithm")
     public void setAlgorithm(String algorithm) {
         this.algorithm = algorithm;
     }
@@ -66,12 +58,12 @@ public class CanvasRequest {
     /**
      * The unix time this request was issued at.
      */
-    @JsonProperty("issuedAt")
+    @org.codehaus.jackson.annotate.JsonProperty("issuedAt")
     public Integer getIssuedAt() {
         return issuedAt;
     }
 
-    @JsonProperty("issuedAt")
+    @org.codehaus.jackson.annotate.JsonProperty("issuedAt")
     public void setIssuedAt(Integer issuedAt) {
         this.issuedAt = issuedAt;
     }
@@ -80,12 +72,12 @@ public class CanvasRequest {
      * The Salesforce unique id for this user.
      * @return
      */
-    @JsonProperty("userId")
+    @org.codehaus.jackson.annotate.JsonProperty("userId")
     public String getUserId() {
         return userId;
     }
 
-    @JsonProperty("userId")
+    @org.codehaus.jackson.annotate.JsonProperty("userId")
     public void setUserId(String userId) {
         this.userId = userId;
     }
@@ -93,7 +85,7 @@ public class CanvasRequest {
     /**
      * Context information about the user, org and environment.
      */
-    @JsonProperty("context")
+    @org.codehaus.jackson.annotate.JsonProperty("context")
     public CanvasContext getContext() {
         return canvasContext;
     }
@@ -101,23 +93,23 @@ public class CanvasRequest {
     /**
      * Client instance information required while using the Sfdc.canvas.client JavaScript API.
      */
-    @JsonProperty("context")
+    @org.codehaus.jackson.annotate.JsonProperty("context")
     public void setContext(CanvasContext canvasContext) {
         this.canvasContext = canvasContext;
     }
 
     /**
-     * Unique information about this client (including oauth token). This information (in JSON) format needs to be
-     * included on all client side SDK calls. 
+     * Client information passed from client to server. Contains authorization information
+     * and instance information.
      */
-    @JsonProperty("client")
+    @org.codehaus.jackson.annotate.JsonProperty("client")
     public CanvasClient getClient() {
         return client;
     }
 
-    @JsonProperty("client")
+    @org.codehaus.jackson.annotate.JsonProperty("client")
     public void setClient(CanvasClient client) {
         this.client = client;
     }
-}
 
+}

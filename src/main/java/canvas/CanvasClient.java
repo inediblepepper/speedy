@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011, salesforce.com, inc.
+ * Copyright (c) 2011-2013, salesforce.com, inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided
@@ -25,22 +25,14 @@
  */
 package canvas;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
-
 /**
  * Describes contextual information about the current canvas client (third party app). This Object,
  * in JS literal notation, needs to ba passed on all Sfdc.canvas.client requests.
- *
  */
-@JsonIgnoreProperties(ignoreUnknown=true)
+@org.codehaus.jackson.annotate.JsonIgnoreProperties(ignoreUnknown=true)
 public class CanvasClient
 {
     private String OAuthToken;
-    private String clientId;
     private String instanceId;
     private String targetOrigin;
     private String instanceUrl;
@@ -48,7 +40,7 @@ public class CanvasClient
     /**
      * The scoped OAuth token to be used to subsequent REST calls
      */
-    @JsonProperty("oauthToken")
+    @org.codehaus.jackson.annotate.JsonProperty("oauthToken")
     public String getOAuthToken() {
         return OAuthToken;
     }
@@ -56,19 +48,9 @@ public class CanvasClient
     /**
      * @return The scoped OAuth token to be usd for subsequent REST calls.
      */
-    @JsonProperty("oauthToken")
+    @org.codehaus.jackson.annotate.JsonProperty("oauthToken")
     public void setOAuthToken(String OAuthToken) {
         this.OAuthToken = OAuthToken;
-    }
-
-    @JsonProperty("clientId")
-    public String getClientId() {
-        return clientId;
-    }
-
-    @JsonProperty("clientId")
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
     }
 
     /**
@@ -76,12 +58,12 @@ public class CanvasClient
      * the same canvas app is placed on a page more than once.
      * @return Unique identifier for this canvas app
      */
-    @JsonProperty("instanceId")
+    @org.codehaus.jackson.annotate.JsonProperty("instanceId")
     public String getInstanceId() {
         return instanceId;
     }
 
-    @JsonProperty("instanceId")
+    @org.codehaus.jackson.annotate.JsonProperty("instanceId")
     public void setInstanceId(String instanceId) {
         this.instanceId = instanceId;
     }
@@ -90,12 +72,12 @@ public class CanvasClient
      * @returns the origin (http://somesalesforcedomain:port) of the parent to the canvas app. This is used so
      * the in browser proxy knows where to post the request to.
      */
-    @JsonProperty("targetOrigin")
+    @org.codehaus.jackson.annotate.JsonProperty("targetOrigin")
     public String getTargetOrigin() {
         return this.targetOrigin;
     }
 
-    @JsonProperty("targetOrigin")
+    @org.codehaus.jackson.annotate.JsonProperty("targetOrigin")
     public void setTargetOrigin(String targetOrigin) {
         this.targetOrigin = targetOrigin;
     }
@@ -104,14 +86,14 @@ public class CanvasClient
      * The base url for all subsequent REST call, this has the correct
      * Salesforce instance this organization is pinned to.
      */
-    @JsonProperty("instanceUrl")
+    @org.codehaus.jackson.annotate.JsonProperty("instanceUrl")
     public String getInstanceUrl() {
         return instanceUrl;
     }
 
-    @JsonProperty("instanceUrl")
+    @org.codehaus.jackson.annotate.JsonProperty("instanceUrl")
     public void setInstanceUrl(String instanceUrl) {
         this.instanceUrl = instanceUrl;
     }
-}
 
+}
