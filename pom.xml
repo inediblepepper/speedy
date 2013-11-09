@@ -70,7 +70,24 @@
             <artifactId>commons-codec</artifactId>
             <version>1.4</version>
         </dependency>
-
+        
+        <!-- Needed for device detection in User-Agent string -->
+        <dependency>
+			<groupId>net.sf.uadetector</groupId>
+			<artifactId>uadetector-core</artifactId>
+			<version>0.9.10</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.uadetector</groupId>
+			<artifactId>uadetector-resources</artifactId>
+			<version>2013.09</version>
+		</dependency>
+        <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-simple</artifactId>
+          <version>1.7.5</version>
+        </dependency>
+                
     </dependencies>
 
     <build>

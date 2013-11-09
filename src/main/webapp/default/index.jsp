@@ -27,15 +27,10 @@ POSSIBILITY OF SUCH DAMAGE.
 <%@ page import="canvas.SignedRequest" %>
 <%@ page import="java.util.Map" %>
 <%
-    // Pull the signed request out of the request body and verify/decode it.
-    Map<String, String[]> parameters = request.getParameterMap();
-    String[] signedRequest = parameters.get("signed_request");
-    if (signedRequest == null) {%>
+    if (request.getAttribute("canvasRequest") == null) {%>
         This App must be invoked via a signed request!<%
         return;
     }
-    String yourConsumerSecret=System.getenv("CANVAS_CONSUMER_SECRET");
-    String signedRequestJson = SignedRequest.verifyAndDecodeAsJson(signedRequest[0], yourConsumerSecret);
 %>
 <!DOCTYPE html>
 <html>
@@ -55,7 +50,7 @@ POSSIBILITY OF SUCH DAMAGE.
             }
 
             Sfdc.canvas(function() {
-                var sr = JSON.parse('<%=signedRequestJson%>');
+                var sr = JSON.parse('${canvasRequestJson}');
                 var photoUri = sr.context.user.profileThumbnailUrl +  "?oauth_token=" + sr.client.oauthToken;
                 Sfdc.canvas.byId('fullname').innerHTML = sr.context.user.fullName;
                 Sfdc.canvas.byId('profile').src = (photoUri.indexOf("http")==0 ? "" :sr.client.instanceUrl) + photoUri;
@@ -80,7 +75,6 @@ POSSIBILITY OF SUCH DAMAGE.
                 <h1 >Hello <span id='fullname'></span>!</h1>
                 <h2>Welcome to the Force.com Canvas Java Quick Start Template!</h2>
             </div>
-
             <div id="canvas-content">
                 <h1>Canvas Request</h1>
                 <h2>Below is some information received in the Canvas Request:</h2>
