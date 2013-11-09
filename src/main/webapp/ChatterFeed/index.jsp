@@ -61,10 +61,10 @@ POSSIBILITY OF SUCH DAMAGE.
     <div id="page">
         <div id="content">
             <div id="header">
-                <h1>Welcome to Canvas in the ${"MOBILE_BROWSER" eq ua.type ? "Mobile" : ""} Publisher!</h1>
+                <h1>Welcome to Canvas in the Chatter Feed!</h1>
             </div>
             <div id="canvas-content">
-            <h2>With Force.com Canvas in the Publisher, you can:</h2>
+            <h2>With Force.com Canvas in the feed, you can:</h2>
             <ul>
               <li>Feature one</li>
               <li>Feature two</li>
