@@ -34,9 +34,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.uadetector.ReadableUserAgent;
-import net.sf.uadetector.UserAgentStringParser;
-import net.sf.uadetector.service.UADetectorServiceFactory;
+import util.UserAgent;
+
 import canvas.CanvasRequest;
 import canvas.SignedRequest;
 
@@ -55,15 +54,12 @@ public class CanvasController extends HttpServlet {
 
 	private static final long serialVersionUID = 2956510495364791829L;
 
-	private static final UserAgentStringParser parser = UADetectorServiceFactory
-	        .getResourceModuleParser();
-
 	@Override
 	protected void service(HttpServletRequest request,
 	        HttpServletResponse response) throws ServletException, IOException {
 		String srString = request.getParameter(SIGNED_REQUEST_PARAM);
-		ReadableUserAgent ua = parser.parse(request.getHeader("User-Agent"));
-		request.setAttribute("ua",ua);
+
+		request.setAttribute("ua",UserAgent.parse(request.getHeader("User-Agent")));
 		if (!"POST".equals(request.getMethod())) {
 			forward(NO_SIGNED_REQUEST_RESOURCE, request, response);
 			return;
