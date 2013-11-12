@@ -58,7 +58,7 @@ POSSIBILITY OF SUCH DAMAGE.
         </script>
     </head>
     <body>
-    <div id="page" style="height:${ua.device.mobile ? '100%' : canvasRequest.context.environmentContext.dimensions.height}">
+    <div id="page" style="height:${canvasRequest.context.environmentContext.dimensions.height}">
         <div id="content">
             <div id="header">
                 <h1>Welcome to Canvas in the ${ua.device.mobile ? "Mobile" : ""} Publisher!</h1>
