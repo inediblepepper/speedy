@@ -24,8 +24,6 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 POSSIBILITY OF SUCH DAMAGE.
 --%>
 
-<%@ page import="canvas.SignedRequest" %>
-<%@ page import="java.util.Map" %>
 <%
     if (request.getAttribute("canvasRequest") == null) {%>
         This App must be invoked via a signed request!<%
@@ -37,78 +35,53 @@ POSSIBILITY OF SUCH DAMAGE.
     <head>
         <title>Force.com Canvas Java Quick Start</title>
 
-        <link rel="stylesheet" type="text/css" href="/sdk/css/canvas.css" />
+        <link rel="stylesheet" type="text/css" href="/default/default.css" />
 
         <script type="text/javascript" src="/sdk/js/canvas-all.js"></script>
         <script type="text/javascript" src="/scripts/json2.js"></script>
         <script type="text/javascript" src="/scripts/chatter-talk.js"></script>
 
         <script>
-            if (self === top) {
-                // Not in Iframe
-                alert("This canvas app must be included within an iframe");
-            }
-
-            Sfdc.canvas(function() {
-                var sr = JSON.parse('${canvasRequestJson}');
-                var photoUri = sr.context.user.profileThumbnailUrl +  "?oauth_token=" + sr.client.oauthToken;
-                Sfdc.canvas.byId('fullname').innerHTML = sr.context.user.fullName;
-                Sfdc.canvas.byId('profile').src = (photoUri.indexOf("http")==0 ? "" :sr.client.instanceUrl) + photoUri;
-                Sfdc.canvas.byId('firstname').innerHTML = sr.context.user.firstName;
-                Sfdc.canvas.byId('lastname').innerHTML = sr.context.user.lastName;
-                Sfdc.canvas.byId('username').innerHTML = sr.context.user.userName;
-                Sfdc.canvas.byId('email').innerHTML = sr.context.user.email;
-                Sfdc.canvas.byId('company').innerHTML = sr.context.organization.name;
-
-                chatterTalk.init(sr, "chatter-submit", "speech-input-field", function(data) {
-                    Sfdc.canvas.byId('status').innerHTML = data.statusText;
-                    Sfdc.canvas.byId("speech-input-field").value = "";
-                });
-            });
-
+var sr = JSON.parse('${canvasRequestJson}');
+Sfdc.canvas(function() {
+    var photoUri = sr.context.user.profileThumbnailUrl +  "?oauth_token=" + sr.client.oauthToken;
+    Sfdc.canvas.byId('header').style.backgroundImage =  "url('"+(photoUri.indexOf("http")==0 ? "" :sr.client.instanceUrl) + photoUri+"')";
+});
         </script>
     </head>
     <body>
     <div id="page">
         <div id="content">
             <div id="header">
-                <h1 >Hello <span id='fullname'></span>!</h1>
+                <h1 >Hello <span id='fullname'>${canvasRequest.context.userContext.fullName}</span>!</h1>
                 <h2>Welcome to the Force.com Canvas Java Quick Start Template!</h2>
             </div>
             <div id="canvas-content">
-                <h1>Canvas Request</h1>
-                <h2>Below is some information received in the Canvas Request:</h2>
-                <div id="canvas-request">
-                    <table border="0" width="100%">
-                        <tr>
-                            <td></td>
-                            <td><b>First Name: </b><span id='firstname'></span></td>
-                            <td><b>Last Name: </b><span id='lastname'></span></td>
-                        </tr>
-                        <tr>
-                            <td><img id='profile' border="0" src="" /></td>
-                            <td><b>Username: </b><span id='username'></span></td>
-                            <td colspan="2"><b>Email Address: </b><span id='email'></span></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td colspan="3"><b>Company: </b><span id='company'></span></td>
-                        </tr>
-                    </table>
-                </div>
-                <div id="canvas-chatter">
-                    <table border="0" width="100%">
-                        <tr>
-                            <td width="15%"><b>Post to Chatter:&nbsp</b></td>
-                            <td width="65%"><input id="speech-input-field" type="text" x-webkit-speech/></td>
-                            <td width="6%"><button id="chatter-submit" type="submit"/></td>
-                            <td width="10%"><span id="status" style="color:green"></span></td>
-                        </tr>
-                    </table>
-                </div>
+              <div id="content-tabs" class="tabs">
+                <section id="context">
+                  <h2><a href="#context">Context</a></h2>
+                  <p>Below is some information received in the Canvas Request.</p>
+                  <p><jsp:include page="context.jsp"/></p>
+                </section>
+                <section id="resize">
+                  <h2><a href="#resize">Resize</a></h2>
+                  <div><jsp:include page="resize.jsp"/></div>
+                </section>
+                <section id="events">
+                  <h2><a href="#events">Events</a></h2>
+                  <div>Pub/Sub goes here.</div>
+                </section>
+                <section id="scrolling">
+                  <h2><a href="#scrolling">Scrolling</a></h2>
+                  <div>Scrolling goes here.</div>
+                </section>
+                <section id="debug">
+                  <h2><a href="#debug">Debugging</a></h2>
+                  <div>Debugging goes here.</div>
+                </section>
+              </div>
             </div>
         </div>
-
         <div id="footercont">
             <div id="footerleft">
                 <p>Powered By: <a title="Heroku" href="#" onclick="window.top.location.href='http://www.heroku.com'"><strong>Heroku</strong></a></p>
