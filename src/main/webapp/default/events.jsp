@@ -111,7 +111,7 @@ Force.com Canvas supports cross-domain eventing between multiple canvas applicat
 to see the event subscription in action! 
 </p>
 <p>
-You can also subscribe to custom or other Force.com canvas.  Enter the event name and click "Subscribe".  Streaming api event names should
+You can also subscribe to custom or other Force.com Canvas events.  Enter the event name and click "Subscribe".  Streaming api event names should
 look be in the form <b><code>sfdc.streamingapi:/topics/somecustomtopic</code></b>
 </p>
 <table  id="event-table" border="0"  width="100%" height="100%" style="text-align:left; ">
