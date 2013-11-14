@@ -64,8 +64,13 @@ function min(value,min){
 }
 
 </script>
-
-<table id="button-table" border="0"  width="100%" style="text-align: center; ">
+<p>
+Force.com Canvas supports dynamic and automatic resizing so you can manage the size of the Canvas application yourself,
+or let Force.com Canvas do all the work.  It's that easy!  You can also subscribe to resize events so your application gets
+notified. <a href="#resize" onclick="subscribe('canvas.resize');">Subscribe</a> to the resize event and see the resize event
+in action on the "Events" tab.
+</p>
+<table valign="top" id="button-table" border="0"  width="100%" height="300px" style="text-align: center; ">
     <tr>
       <td width="33%">&nbsp;</td>
       <td width="33%"><button type="button" onclick="adjustHeight('-10%');" alt="Decrease Height" style="width:30px;height:60px; background:url(/default/arrow_up.png) no-repeat scroll center center / 16px 16px transparent;"/></td>

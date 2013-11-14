@@ -69,7 +69,7 @@ Sfdc.canvas(function() {
                 </section>
                 <section id="events">
                   <h2><a href="#events">Events</a></h2>
-                  <div>Pub/Sub goes here.</div>
+                  <div><jsp:include page="events.jsp"/></div>
                 </section>
                 <section id="scrolling">
                   <h2><a href="#scrolling">Scrolling</a></h2>
