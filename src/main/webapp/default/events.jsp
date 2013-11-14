@@ -130,7 +130,7 @@ look be in the form <b>sfdc.streamingapi:/topics/somecustomtopic</b>
       <td colspan="2" width="60%"><span id="subscriptions"></span></td>
     </tr>
     <tr>
-      <td><b>Event Log: </b>(<a href="#events" onclick="clearLog();">Clear</a>)</td>
-      <td colspan="2" width="60%"><span><textarea wrap="off" rows="10" name="event-log" id="event-log" readonly="true"></textarea></span></td>
+      <td><b>Event Log: </b>(<a href="#" onclick="clearLog();">Clear</a>)</td>
+      <td colspan="2" width="60%"><span><textarea wrap="off" rows="5" name="event-log" id="event-log" readonly="true"></textarea></span></td>
     </tr>
 </table>

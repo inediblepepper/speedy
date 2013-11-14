@@ -12,9 +12,13 @@
     <script type="text/javascript" src="/default/tabs.js"></script>
 
     <script>
-        function resetSize() {
+        function resetSize(newDimensions) {
+        	var options = newDimensions ? newDimensions : {};
             console.log("resize.");
-            Sfdc.canvas.client.resize(sr.client,  {width : "600px", height : "600px"});
+            Sfdc.canvas.client.resize(sr.client,  {
+            	width : options.width?options.width:"600px", 
+      			height : options.height?options.height:"500px"
+			});
         }
 
         var sr = JSON.parse('${canvasRequestJson}');
@@ -38,6 +42,7 @@
             <a href="javascript:;" onclick="resetSize()" class="tabLink activeLink" id="context">Context</a>
             <a href="javascript:;" onclick="resetSize()" class="tabLink " id="resize">Resize</a>
             <a href="javascript:;" onclick="resetSize()" class="tabLink " id="events">Events</a>
+            <a href="javascript:;" onclick="resetSize()" class="tabLink " id="scroll">Scrolling</a>
         </div>
 
         <div class="tabcontent paddingAll" id="context-1">
@@ -51,7 +56,9 @@
         <div class="tabcontent paddingAll hide" id="events-1">
             <jsp:include page="events.jsp"/>
         </div>
-
+        <div class="tabcontent paddingAll hide" id="scroll-1">
+            <jsp:include page="scroll.jsp"/>
+        </div>
         <div id="footercont">
             <div id="footerleft">
                 <p>Powered By: <a title="Heroku" href="#" onclick="window.top.location.href='http://www.heroku.com'"><strong>Heroku</strong></a>
