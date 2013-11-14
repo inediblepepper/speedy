@@ -2,7 +2,7 @@
 </script>
 <p>
 Force.com Canvas can notify your canvas application when the user scrolls on the outer page.  The scroll event is fired with 
-right information, so you know exactly where the user is. 
+the right information, so you know exactly where the user is. 
 </p> 
 <p>
 <a href="#" onclick="subscribe('canvas.scroll');">Subscribe</a> to the scroll event and see how the
