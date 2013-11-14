@@ -81,11 +81,11 @@ POSSIBILITY OF SUCH DAMAGE.
                 </span>
                 <span class="input-grouping">
                     <label for='height'>Height:</label>
-                    <input id='height' class='input input-iphone' type='text' value="200px"/>
+                    <input id='height' class='input input-iphone' type='text' value="100px"/>
                 </span>
                 <span class="input-grouping">
                     <label for='title'>Title:</label>
-                    <input id='title' class='input input-iphone' type='text' value="Link Title"/>
+                    <input id='title' class='input input-iphone' type='text' value="Activate Canvas"/>
                 </span>
                 <br/>
                 <span class="radio-grouping"><input id="textPost" class='postType' name='postType' type='radio' value='Text' onclick='myPublisher.selectPostType(this.value)'/><label for='textPost'>Text Post</label></span>
