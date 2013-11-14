@@ -17,7 +17,7 @@
             console.log("resize.");
             Sfdc.canvas.client.resize(sr.client,  {
             	width : options.width?options.width:"600px", 
-      			height : options.height?options.height:"500px"
+      			height : options.height?options.height:"600px"
 			});
         }
 
