@@ -23,63 +23,74 @@ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABI
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 --%>
-
-<%@ page import="canvas.SignedRequest" %>
-<%@ page import="java.util.Map" %>
-<%
-    if (request.getAttribute("canvasRequest") == null) {%>
-        This App must be invoked via a signed request!<%
-        return;
-    }
-%>
+<%@taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
     <head>
         <title>Force.com Canvas Java Quick Start</title>
-
-        <link rel="stylesheet" type="text/css" href="/Publisher/canvas.css" />
-
-        <script type="text/javascript" src="/sdk/js/canvas-all.js"></script>
+        <link rel="stylesheet" type="text/css" href="/Publisher/publisher${ua.device.mobile ? '-mobile':'-desktop'}.css"/>
         <script type="text/javascript" src="/scripts/json2.js"></script>
-        <script type="text/javascript" src="/scripts/chatter-talk.js"></script>
-
+        <script type="text/javascript" src="/sdk/js/canvas-all.js"></script>
+        <script type="text/javascript" src="/Publisher/publisher.js"></script>
         <script>
-            if (self === top) {
-                // Not in Iframe
-                alert("This canvas app must be included within an iframe");
-            }
+            if (self === top) { alert("This canvas app must be included within an iframe"); }
 
             Sfdc.canvas(function() {
                 var sr = JSON.parse('${canvasRequestJson}');
-                var photoUri = sr.context.user.profileThumbnailUrl +  "?oauth_token=" + sr.client.oauthToken;
-                Sfdc.canvas.byId('header').style.backgroundImage =  "url('"+(photoUri.indexOf("http")==0 ? "" :sr.client.instanceUrl) + photoUri+"')";
+                myPublisher.init(sr, ${ua.device.mobile});
+                var handlers = myPublisher.handlers();
+                Sfdc.canvas.client.subscribe(sr.client, handlers.subscriptions);
+                myPublisher.updateContent();
             });
-
         </script>
     </head>
     <body>
-    <div id="page" style="height:${canvasRequest.context.environmentContext.dimensions.height}">
-        <div id="content">
-            <div id="header">
-                <h1>Welcome to Canvas in the ${ua.device.mobile ? "Mobile" : ""} Publisher!</h1>
-            </div>
-            <div id="canvas-content">
-            <h2>With Force.com Canvas in the Publisher, you can:</h2>
-            <ul>
-              <li>Feature one</li>
-              <li>Feature two</li>
-              <li>Feature three</li>
-              <li>Feature four</li>
-            </ul>
-            </div>
-        </div>
+    <%--<div id="publisher" style="height:${canvasRequest.context.environmentContext.dimensions.clientHeight}">--%>
+    <div id="publisher">
+        <div id="publisher-content">
+            <div id="publisher-canvas-content">
 
-        <div id="footercont">
-            <div id="footerleft">
-                <p>Powered By: <a title="Heroku" href="#" onclick="window.top.location.href='http://www.heroku.com'"><strong>Heroku</strong></a></p>
-            </div>
-            <div id="footerright">
-                <p>Salesforce: <a title="Safe Harbor" href="http://www.salesforce.com/company/investor/safe_harbor.jsp"><strong>SafeHarbor</strong></a></p>
+                <c:if test="${!ua.device.mobile}" >
+                <table width='100%'>
+                    <tr>
+                        <td><b>Name: </b><span id='name'></span></td>
+                        <td><b>Location: </b><span id='location'></span></td>
+                        <td><b>Header: </b><span id='header-enabled'></span></td>
+                        <td><b>Share: </b><span id='share-enabled'></span></td>
+                    </tr>
+                </table>
+                </c:if>
+
+                <label class='left-label' for='events'>Events:</label>
+                <span class="right-input"><input id='events' class="input" type='text' readonly/></span>
+
+                <label for='auxText'>Aux Text:</label>
+                <input id='auxText' class='input' type='text' value='Some Text'/>
+                <label for='description'>Description:</label>
+                <textarea id='description' class='input' onmouseup='myPublisher.resize()'></textarea>
+                <label for='parameters'>Parameters:</label>
+                <textarea id='parameters' class='input' onmouseup='myPublisher.resize()'>{"any":"valid","json":"object"}</textarea>
+
+                <span class="input-grouping">
+                    <label for='thumbnail'>Thumbnail:</label>
+                    <select id='thumbnail' class="select input input-iphone" onchange='myPublisher.selectThumbnail(this.value)'>
+                    <option value="none">None</option>
+                    <option value="/images/canvaslogo.png">Canvas Logo</option>
+                    <option value="/images/salesforce.png">Salesforce</option>
+                </select>
+                </span>
+                <span class="input-grouping">
+                    <label for='height'>Height:</label>
+                    <input id='height' class='input input-iphone' type='text' value="200px"/>
+                </span>
+                <span class="input-grouping">
+                    <label for='title'>Title:</label>
+                    <input id='title' class='input input-iphone' type='text' value="Link Title"/>
+                </span>
+                <br/>
+                <span class="radio-grouping"><input id="textPost" class='postType' name='postType' type='radio' value='Text' onclick='myPublisher.selectPostType(this.value)'/><label for='textPost'>Text Post</label></span>
+                <span class="radio-grouping"><input id="linkPost" class='postType' name='postType' type='radio' value='Link' onclick='myPublisher.selectPostType(this.value)'/><label for='linkPost'>Link Post</label></span>
+                <span class="radio-grouping"><input id="canvasPost" class='postType' name='postType' type='radio' value='Canvas' onclick='myPublisher.selectPostType(this.value)'/><label for='canvasPost'>Canvas Post</label></span>
             </div>
         </div>
     </div>
