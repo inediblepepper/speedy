@@ -94,7 +94,7 @@ function updateSubscriptions(){
 	if (subs){
 		for (index in subscriptions){
 			name = subscriptions[index]; 
-			html+= name + " <a href=\"#events\" onclick=\"unsubscribe('"+name+"');\">Remove</a><br/>"
+			html+= name + " <a href=\"#\" onclick=\"unsubscribe('"+name+"');\">Remove</a><br/>"
 		}
 	}
 	subs.innerHTML = html;
@@ -112,25 +112,25 @@ to see the event subscription in action!
 </p>
 <p>
 You can also subscribe to custom or other Force.com Canvas events.  Enter the event name and click "Subscribe".  Streaming api event names should
-look be in the form <b><code>sfdc.streamingapi:/topics/somecustomtopic</code></b>
+look be in the form <b>sfdc.streamingapi:/topics/somecustomtopic</b>
 </p>
-<table  id="event-table" border="0"  width="100%" height="100%" style="text-align:left; ">
-    <tr height="15%">
-      <td valign="top" width="30%"><b>Enter event text to send:</b></td>
+<table  id="event-table">
+    <tr>
+      <td width="30%"><b>Enter event text to send:</b></td>
       <td width="60%"><span><input id="event-payload" type="text"/></span></td>
       <td width="*"><input onclick="fire();" type="submit" value="Fire!"></input></td>
     </tr>
-    <tr height="35%">
-      <td valign="top"><b>Subscribe to event:</b></td>
+    <tr>
+      <td><b>Subscribe to event:</b></td>
       <td width="60%"><span><input id="new-topic" type="text"/></span></td>
       <td width="*"><input onclick="subscribe(document.getElementById('new-topic').value);document.getElementById('new-topic').value='';" type="submit" value="Subscribe"></input></td>
     </tr>
-    <tr height="35%">
-      <td valign="top"><b>Current subscriptions:</b></td>
+    <tr>
+      <td><b>Current subscriptions:</b></td>
       <td colspan="2" width="60%"><span id="subscriptions"></span></td>
     </tr>
-    <tr height="*">
-      <td valign="top"><b>Event Log: </b>(<a href="#events" onclick="clearLog();">Clear</a>)</td>
+    <tr>
+      <td><b>Event Log: </b>(<a href="#events" onclick="clearLog();">Clear</a>)</td>
       <td colspan="2" width="60%"><span><textarea wrap="off" rows="10" name="event-log" id="event-log" readonly="true"></textarea></span></td>
     </tr>
 </table>
