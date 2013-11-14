@@ -23,9 +23,6 @@ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABI
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 --%>
-
-<%@ page import="canvas.SignedRequest" %>
-<%@ page import="java.util.Map" %>
 <%
     if (request.getAttribute("canvasRequest") == null) {%>
         This App must be invoked via a signed request!<%
@@ -37,51 +34,38 @@ POSSIBILITY OF SUCH DAMAGE.
     <head>
         <title>Force.com Canvas Java Quick Start</title>
 
-        <link rel="stylesheet" type="text/css" href="/ChatterFeed/canvas.css" />
+        <link rel="stylesheet" type="text/css" href="/ChatterFeed/chatterfeed${ua.device.mobile ? '-mobile':''}.css"/>
 
         <script type="text/javascript" src="/sdk/js/canvas-all.js"></script>
         <script type="text/javascript" src="/scripts/json2.js"></script>
         <script type="text/javascript" src="/scripts/chatter-talk.js"></script>
 
         <script>
-            if (self === top) {
-                // Not in Iframe
-                alert("This canvas app must be included within an iframe");
-            }
+            if (self === top) { alert("This canvas app must be included within an iframe"); }
 
             Sfdc.canvas(function() {
                 var sr = JSON.parse('${canvasRequestJson}');
                 var photoUri = sr.context.user.profileThumbnailUrl +  "?oauth_token=" + sr.client.oauthToken;
-                Sfdc.canvas.byId('header').style.backgroundImage =  "url('"+(photoUri.indexOf("http")==0 ? "" :sr.client.instanceUrl) + photoUri+"')";
+                Sfdc.canvas.byId('profile-pic').src =  photoUri.indexOf("http")==0 ? "" :sr.client.instanceUrl + photoUri;
+                Sfdc.canvas.byId('profile-pic').alt = sr.context.user.firstName + " " + sr.context.user.lastName;
+                Sfdc.canvas.byId('parameters').innerHTML = JSON.stringify(sr.context.environment.parameters);
             });
 
         </script>
     </head>
-    <body style="height:${canvasRequest.context.environmentContext.dimensions.height}">
-    <div id="page">
-        <div id="content">
-            <div id="header">
-                <h1>Welcome to Canvas in the Chatter Feed!</h1>
-            </div>
-            <div id="canvas-content">
-            <h2>With Force.com Canvas in the feed, you can:</h2>
+    <body>
+    <%--<div id="publisher" style="height:${canvasRequest.context.environmentContext.dimensions.clientHeight}">--%>
+    <div id="feed">
+        <div id="feed-content">
+            <img id="profile-pic" src="" alt="">
+            <span class="right-just"><h3>Welcome to Canvas in the Chatter Feed!</h3></span>
+            <h4>With Force.com Canvas in the feed, you can:</h4>
             <ul>
-              <li>Feature one</li>
-              <li>Feature two</li>
-              <li>Feature three</li>
-              <li>Feature four</li>
+                <li>Act on parameters: <span id='parameters'></span></li>
+                <li>Display your 'Live' content.</li>
+                <li>Use the Canvas SDK to enhance your app</li>
             </ul>
             </div>
         </div>
-
-        <div id="footercont">
-            <div id="footerleft">
-                <p>Powered By: <a title="Heroku" href="#" onclick="window.top.location.href='http://www.heroku.com'"><strong>Heroku</strong></a></p>
-            </div>
-            <div id="footerright">
-                <p>Salesforce: <a title="Safe Harbor" href="http://www.salesforce.com/company/investor/safe_harbor.jsp"><strong>SafeHarbor</strong></a></p>
-            </div>
-        </div>
-    </div>
     </body>
  </html>
