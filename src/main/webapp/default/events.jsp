@@ -8,10 +8,14 @@ if(!String.prototype.startsWith){
 var subscriptions = [];
 
 function eventHandler(eventName, payload){
+	var data = Sfdc.canvas.isObject(payload) ? JSON.stringify(payload) : payload;
+	writeToLog("Received '" + eventName + "': " + data + '\n');
+}
+
+function writeToLog(message){
 	var data,logger = document.getElementById('event-log');
-	data = Sfdc.canvas.isObject(payload) ? JSON.stringify(payload) : payload;
     if(logger){
-        logger.value += "Received '" + eventName + "': " + data + '\n';
+        logger.value += message;
     }
 }
 
@@ -35,6 +39,16 @@ function subscribe(eventName){
 			params:params,
 			onData: function(payload){
 				eventHandler(eventName,payload);
+			},
+			// This only fires when subscribing to streaming events as of Winter '14.
+			onComplete: function(payload){
+				if (!payload.success){
+					writeToLog("** WARNING ** Unable to subscribe to event '"+eventName+"': " + payload.errorMessage);
+					unsubscribe(eventName);
+				}
+				else{
+					writeToLog("Successfully subscribed to streaming '"+eventName+"': " + JSON.stringify(payload));
+				}
 			}
 		}]);
 		if (Sfdc.canvas.indexOf(subscriptions,eventName) < 0){
