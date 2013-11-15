@@ -9,13 +9,13 @@ var subscriptions = [];
 
 function eventHandler(eventName, payload){
 	var data = Sfdc.canvas.isObject(payload) ? JSON.stringify(payload) : payload;
-	writeToLog("Received '" + eventName + "': " + data + '\n');
+	writeToLog("Received '" + eventName + "': " + data);
 }
 
 function writeToLog(message){
 	var data,logger = document.getElementById('event-log');
     if(logger){
-        logger.value += message;
+        logger.value += message+'\n';
     }
 }
 
