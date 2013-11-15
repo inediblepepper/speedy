@@ -23,7 +23,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 (function ($$){
 
-    var sr, mobile, postType, thumbnailUrl;
+    var sr, mobile;
 
     myPublisher = {
 
@@ -31,58 +31,38 @@
             sr = signedRequest;
             mobile = isMobile;
         },
-
-        // Auto resize the iframe to fit the current content.
-        resize : function() {
-            $$.client.resize(sr.client);
+        
+        clearPostTypes : function() {
+        	$$.byId("picklist-number").value = "";
+        	$$.byId("sobject").value = "";
+        	$$.byId("x-coord-name").value = "";
+        	$$.byId("y-coord-name").value = "";
+        	$$.byId("color-field-name").value = "";
+        	$$.byId("radius-field-name").value = "";
         },
 
         // Simply display incoming events in order
         logEvent : function(name) {
-            var elem = $$.byId("events");
-            var sep =  ($$.isNil(elem.value)) ? "" : ",";
-            elem.value += sep + name
+        	console.log("Received event:" + name);
         },
 
-        selectPostType : function(e) {
-            console.log("got click", e);
-            postType = e;
-            // Enable the share button
-            $$.client.publish(sr.client, {name : "publisher.setValidForSubmit", payload : true});
-        },
-
-        clearPostTypes : function() {
-            var i, elements = $$.byClass('postType');
-            for (i = 0; i < elements.length; i+=1) {
-                elements[i].checked=false;
-            }
-        },
-
-        canvasOptions : function(elem, option) {
-            var bool = Sfdc.canvas.indexOf(sr.context.application.options, option) == -1;
-            elem.innerHTML = (bool) ? "&#x2713;" : "&#x2717;";
-            elem.style.color = (bool) ? "green" : "red";
-        },
-
-        updateContent : function() {
-            if (!mobile) {
-                $$.byId('name').innerHTML = sr.context.user.firstName + " " + sr.context.user.lastName;
-                $$.byId('location').innerHTML = sr.context.environment.displayLocation;
-                myPublisher.canvasOptions($$.byId('header-enabled'), "HideHeader");
-                myPublisher.canvasOptions($$.byId('share-enabled'), "HideShare");
-            }
-        },
-
-        selectThumbnail: function(e) {
-            thumbnailUrl =  (e === "none") ? null :  window.location.origin + e;
-            console.log("Thumbnail URL " + thumbnailUrl);
+        checkIsReady : function() {
+        	// Let the publisher know if we can share the post.
+            $$.client.publish(sr.client, {name : "publisher.setValidForSubmit", 
+            	payload : (
+        			!$$.isNil($$.byId("picklist-number").value) &&
+        			!$$.isNil($$.byId("sobject").value) &&
+        			!$$.isNil($$.byId("x-coord-name").value) &&
+        			!$$.isNil($$.byId("y-coord-name").value) &&
+        			!$$.isNil($$.byId("color-field-name").value) &&
+        			!$$.isNil($$.byId("radius-field-name").value)
+    			)});
         },
 
         handlers : function() {
 
             var handlers = {
                 onSetupPanel : function (payload) {
-                    myPublisher.resize();   // Do I want to do this on iphone?
                     myPublisher.logEvent("setupPanel");
                 },
                 onShowPanel : function(payload) {
@@ -106,30 +86,20 @@
                 onGetPayload : function() {
                     myPublisher.logEvent("getPayload");
                     var p = {};
-                    if (postType === 'Text') {
-                        // Example of a Text Post
-                        p.feedItemType = "TextPost";
-                        p.auxText = $$.byId('auxText').value;
-                    }
-                    else if (postType === 'Link') {
-                        // Example of a Link Post
-                        p.feedItemType = "LinkPost";
-                        p.auxText = $$.byId('auxText').value;
-                        p.url = "http://www.salesforce.com";
-                        p.urlName = $$.byId('title').value;
-                    }
-                    else if (postType === 'Canvas') {
-                        // Example of a Canvas Post
-                        p.feedItemType = "CanvasPost";
-                        p.auxText = $$.byId('auxText').value;
-                        p.namespace =  sr.context.application.namespace;
-                        p.developerName =  sr.context.application.developerName;
-                        p.height = $$.byId('height').value;
-                        p.title = $$.byId('title').value;
-                        p.description = $$.byId('description').value;
-                        p.parameters = $$.byId('parameters').value;
-                        p.thumbnailUrl = thumbnailUrl;
-                    }
+                    p.feedItemType = "CanvasPost";
+                    // Babu - You'll need to change this accordingly.
+                    p.namespace =  sr.context.application.namespace;
+                    p.developerName =  sr.context.application.developerName;
+                    p.parameters = JSON.stringify({
+                    	 view:"chartView",
+            			 config: {
+            				 numberOfPicklistValues:$$.byId("picklist-number").value,
+            				 sobjectName:$$.byId("sobject").value,
+            				 xFieldName:$$.byId("x-coord-name").value,
+            				 yFieldName:$$.byId("y-coord-name").value,
+            				 colorFieldName: $$.byId("color-field-name").value,
+            				 radiusFieldName: $$.byId("radius-field-name").value
+        			 }});
                     $$.client.publish(sr.client, {name : 'publisher.setPayload', payload : p});
                 }
             };
