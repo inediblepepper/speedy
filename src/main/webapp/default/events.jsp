@@ -152,7 +152,7 @@ to see the event subscription in action!
 <p>
 You can also subscribe to custom or other Force.com Canvas events.  Enter the event name and click "Subscribe".  
 Streaming api event names should be in the form 
-<a href="#" onclick="var topic;document.getElementById('new-topic').value = (topic = window.prompt('Enter streaming API topic name to listen to?'))?'sfdc.streamingapi:/topic/'+topic:'';">sfdc.streamingapi:/topics/&lt;topic&nbsp;name&gt; </a>
+<a href="#" onclick="var topic;document.getElementById('new-topic').value = (topic = window.prompt('Enter streaming API topic name to listen to?'))?'sfdc.streamingapi:/topic/'+topic:'';">sfdc.streamingapi:/topics/&lt;topic&nbsp;name&gt;</a>.
 </p>
 <table cellspacing="0" cellpadding="2px;" id="event-table">
     <tr>
