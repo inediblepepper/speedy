@@ -1,3 +1,28 @@
+<%--
+Copyright (c) 2013, salesforce.com, inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided
+that the following conditions are met:
+
+Redistributions of source code must retain the above copyright notice, this list of conditions and the
+following disclaimer.
+
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
+the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+Neither the name of salesforce.com, inc. nor the names of its contributors may be used to endorse or
+promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+--%>
 <script type="text/javascript">
 
 if(!String.prototype.startsWith){
@@ -108,7 +133,7 @@ function updateSubscriptions(){
 	if (subs){
 		for (index in subscriptions){
 			name = subscriptions[index]; 
-			html+= name + " <a href=\"#\" onclick=\"unsubscribe('"+name+"');\">Remove</a><br/>"
+			html+= "<span style='display:inline' title='" + name + "'>"+name.substring(0,25) + ((name.length > 25)?"...":"") + "</span> <a href=\"#\" onclick=\"unsubscribe('"+name+"');\">Remove</a><br/>"
 		}
 	}
 	subs.innerHTML = html;
@@ -127,23 +152,23 @@ to see the event subscription in action!
 <p>
 You can also subscribe to custom or other Force.com Canvas events.  Enter the event name and click "Subscribe".  Streaming api event names should be in the form <b>sfdc.streamingapi:/topics/somecustomtopic</b>
 </p>
-<table  id="event-table">
+<table cellspacing="0" cellpadding="2px;" id="event-table">
     <tr>
       <td width="30%"><b>Enter event text to send:</b></td>
-      <td width="60%"><span><input id="event-payload" type="text"/></span></td>
+      <td width="55%"><span><input id="event-payload" type="text"/></span></td>
       <td width="*"><input onclick="fire();" type="submit" value="Fire!"></input></td>
     </tr>
     <tr>
       <td><b>Subscribe to event:</b></td>
-      <td width="60%"><span><input id="new-topic" type="text"/></span></td>
-      <td width="*"><input onclick="subscribe(document.getElementById('new-topic').value);document.getElementById('new-topic').value='';" type="submit" value="Subscribe"></input></td>
+      <td><span><input id="new-topic" type="text"/></span></td>
+      <td><input onclick="subscribe(document.getElementById('new-topic').value);document.getElementById('new-topic').value='';" type="submit" value="Subscribe"></input></td>
     </tr>
     <tr>
       <td><b>Current subscriptions:</b></td>
-      <td colspan="2" width="60%"><span id="subscriptions"></span></td>
+      <td colspan="2"><span id="subscriptions"></span></td>
     </tr>
     <tr>
       <td><b>Event Log: </b>(<a href="#" onclick="clearLog();">Clear</a>)</td>
-      <td colspan="2" width="60%"><span><textarea wrap="off" rows="10" name="event-log" id="event-log" readonly="true"></textarea></span></td>
+      <td colspan="2"><span><textarea wrap="off" rows="10" name="event-log" id="event-log" readonly="true"></textarea></span></td>
     </tr>
 </table>
